@@ -1,0 +1,21 @@
+Audio
+	- new([src])
+	- load(src)
+	- play() //goon play
+	- pause()
+	
+	- duration
+	- currentTime = //!! @fuck
+	- volume = //!!
+	- buffered.end(0)
+	
+Flash Sound AS2.0
+	- new()
+	- loadSound(src, true) //will start auto
+	- start([offset])
+	- stop()
+	
+	- setVolume()
+	
+	- duration
+	- position != //unwritable

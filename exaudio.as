@@ -1,34 +1,44 @@
-import flash.external.*;
-
 /**
  * ExAudio
  */
+import flash.external.ExternalInterface;
+
 var sounds:Array = new Array();
 
 
-
-
-
-/* javascript interfaces */
-ExternalInterface.addCallback('create', null, function(url) {
-	var id = sounds.push(new Sound()) - 1;
-	return id; //id refers to the pos in array
+/* js api */
+ExternalInterface.addCallback('createSound', this, function(src, sid) {
+	if(typeof sid === 'number')
+		sounds[sid] = new Sound();
+	else
+		sid = sounds.push(new Sound()) - 1;
+		
+	src || (sounds[sid].src = src);
+	return sid; //sid refers to the sound pos in array
 });
-ExternalInterface.addCallback('pause', null, function(id, pos) {
-	return 'xx';
+
+ExternalInterface.addCallback('load', this, function(sid, src) {
+	sounds[sid].src = src;
+	sounds[sid].loadSound(src, true);
+	sounds[sid].stop();
 });
-ExternalInterface.addCallback('play', null, function(id, arg) {
-	if(typeof arg === 'string') { //load new music and play
-	
-	} else if(typeof arg === 'number') { //jump and play
-	
-	} else { //play
-	
+ExternalInterface.addCallback('play', this, function(sid, src) {
+	if(src) {
+		sounds[sid].src = src;
+		sounds[sid].loadSound(src, true);
+	} else {
+		sounds[sid].start(sounds[sid].position);
 	}
-	return 'xx';
 });
+ExternalInterface.addCallback('pause', this, function(sid) {
+	sounds[sid].stop();
+});
+
 _root.onEnterFrame = function() { //update status per secound
-	//update status
+	//@TODO update status
+	//ExternalInterface.call('Audio.dispatch.updateStatus');
 };
 
+
+ExternalInterface.call('Audio.dispatch.flashLoaded');
 stop();
